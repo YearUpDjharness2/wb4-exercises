@@ -1,11 +1,14 @@
 package com.pluralsight;
 
 public class Employee {
+
     private int employeeId;
     private String name;
     private String department;
     private double payRate;
     private float hoursWorked;
+    private double punchIn;
+
 
     public Employee(int employeeId, String name, String department, double payRate, float hoursWorked) {
         this.employeeId = employeeId;
@@ -13,45 +16,53 @@ public class Employee {
         this.department = department;
         this.payRate = payRate;
         this.hoursWorked = hoursWorked;
+        this.punchIn = -1;
     }
 
-    public int getEmployeeId() {
-        return this.employeeId;
+    public double getTotalPay(){
+        return getRegularPay() + getOvertimePay();
     }
 
-    public String getName() {
-        return this.name;
+    public double getRegularPay(){
+        return getRegularHours() * payRate;
     }
 
-    public String getDepartment() {
-        return this.department;
+    public double getOvertimePay(){
+        return getOvertimeHours() * payRate * 1.5;
     }
 
-    public double getPayRate() {
-        return this.payRate;
+    public float getRegularHours(){
+        return (hoursWorked > 40) ? 40 : hoursWorked;
+
     }
 
-    public float getHoursWorked() {
-        return this.hoursWorked;
+
+    public float getOvertimeHours(){
+        return (hoursWorked > 40 ) ? hoursWorked - 40 : 0 ;
     }
 
-    public double getTotalPay() {
-        if (hoursWorked > 40) {
-            float overtimeHours = hoursWorked - 40;
-            double overtimePay = 40 * payRate;
-            double regularPay = overtimeHours * payRate * 1.5;
-            return regularPay + overtimePay;
+    public void punchIn(double time){
+        if(punchIn == -1){
+            punchIn = time;
+            System.out.println(name + "Punched in at:" + time);
+        } else {
+            System.out.println(name + "Is already punched in.");
         }
-        else {
-            return this.payRate * this.hoursWorked;
+    }
+    public void punchOut(double time){
+        if (punchIn !=-1){
+            double hoursWorkedThisShift = time - punchIn;
+            if (hoursWorkedThisShift > 0){
+                System.out.println(name + "Punched out at: " + time + ". Hours worked this session: " + hoursWorkedThisShift);
+            } else {
+                System.out.println("Invalid punch out time. Must be greater than punch in time.");
+            }
+            punchIn = -1;
+        } else {
+            System.out.println(name + "hasn't been punched in");
         }
+
     }
 
-    public float getRegularHours() {
-        return 0;
-    }
 
-    public float getOvertimeHours() {
-        return 0;
-    }
 }
