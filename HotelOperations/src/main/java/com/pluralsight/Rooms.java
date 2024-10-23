@@ -1,3 +1,4 @@
+
 package com.pluralsight;
 
 public class Rooms {
@@ -7,58 +8,90 @@ public class Rooms {
     private boolean occupied;
     private boolean dirty;
 
-    public Rooms(int numberOfBeds, double price, boolean occupied, boolean dirty) {
+    public Rooms(int numberOfBeds, double price, boolean occupied, boolean dirty){
         this.numberOfBeds = numberOfBeds;
         this.price = price;
         this.occupied = occupied;
         this.dirty = dirty;
     }
-
     public int getNumberOfBeds() {
         return this.numberOfBeds;
     }
-
-    public double getPrice() {
-        return this.price;
+    public double getPrice(){
+        return  this.price;
     }
-
-    public boolean isDirty() {
+    public boolean isDirty(){
         return this.dirty;
     }
-
     public boolean isOccupied() {
         return occupied;
     }
-
     public boolean isAvailable() {
-        return (!this.isDirty() && !this.isOccupied());
+        return ( !this.isDirty() && !this.isOccupied() );
     }
 
-    public void checkIn() {
-        if (this.isAvailable()) {
-            this.occupied = true;
-            this.dirty = true;  
-            System.out.println("Checked into the room.");
-        } else {
-            System.out.println("Room is not available for check-in.");
+    public void checkIn3(){
+        if( !dirty && !occupied){
+            occupied = true;
+            dirty = true;
+        }
+        else if (dirty){
+            System.out.println("Cannot check into a dirty room.");
+        }
+        else if (occupied){
+            System.out.println("Cannot check into a room that is already occupied");
         }
     }
-      public void checkOut() {
-        if (this.isOccupied()) {
-            this.occupied = false;
-            System.out.println("Checked out of the room. It now needs to be cleaned.");
-        } else {
-            System.out.println("Cannot check out. The room is not currently occupied.");
-      }
+    public void checkOut3(){
+        if(occupied){
+            occupied = false;
+        }
+        else{
+            System.out.println("Cannot check out of an unoccupied room!");
+        }
+
+    }
+    public void cleanRoom3(){
+        dirty = false;
     }
 
-    public void cleanRoom() {
-        if (this.isDirty()) {
-            this.dirty = false;
-            System.out.println("The room has been cleaned.");
-        } else {
-            System.out.println("The room is already clean.");
-        }
+    public void checkIn2(){
+        occupied = true;
+        dirty = true;
     }
+    public void checkOut2(){
+        occupied = false;
+    }
+    public void cleanRoom2(){
+        dirty = false;
+    }
+
+
+    public void checkIn(){
+        if (occupied == false && dirty == false){
+            System.out.println("Checked In successfully");
+            occupied = true;
+            dirty = true;
+        }  else System.out.println("Cannot check in! The room is either occupied or not cleaned.");
+    }
+    public void checkOut(){
+        if (occupied == true && dirty == true){
+
+            System.out.println("Checked Out successfully");
+            occupied = false;
+            dirty = true;
+        }  else System.out.println("Cannot check out! The room was either not occupied or not cleaned.");
+        cleanRoom();
+    }
+    public void cleanRoom(){
+        dirty = false;
+        System.out.println("the room is clean now! ");
+    }
+    public void resetRoom(){
+        occupied = false;
+        dirty = false;
+        System.out.println("The room has been reset to ready state by admin.");
+    }
+
 }
 

@@ -61,7 +61,27 @@ public class Employee {
         } else {
             System.out.println(name + "hasn't been punched in");
         }
+    }
+    public int getEmployeeId(){
+        return employeeId;
+    }
+    public String getName(){
+        return name;
+    }
+    public String getDepartment(){
+        return department;
+    }
+    public double getPayRate(){
+        return payRate;
+    }
+    public float getHoursWorked(){
+        return hoursWorked;
+    }
 
+    public String toString() {
+            return "Employee ID: " + employeeId + ", Name: " + name + ", Department: " + department
+                    + ", Pay Rate: $" + payRate + ", Hours Worked: " + hoursWorked
+                    + ", Total Pay: $" + getTotalPay();
     }
 
 
