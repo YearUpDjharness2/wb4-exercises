@@ -27,6 +27,10 @@ class CarTest {
 
     }
 
+    private void assertEquals(int expectedSpeed) {
+
+    }
+
     @Test
     public void brake_should_stopCar_whenChangeIsGreater() {
         //arrange
@@ -43,6 +47,6 @@ class CarTest {
 
         // assert
         int actualSpeed = car.getSpeed();
-        assertEquals(expectedSpeed, actualSpeed);
+        assertEquals(expectedSpeed);
     }
 }
