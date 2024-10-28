@@ -1,11 +1,11 @@
 package com.pluralsight;
-import java.io.*;
+import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
 public class Utility {
-    private Dealership dealership;
+    private DealerShip dealership;
 
-    public UserInterface(Dealership dealership) {
+    public Utility(DealerShip dealership) {
         this.dealership = dealership;
     }
 
@@ -109,7 +109,7 @@ public class Utility {
         System.out.print("Enter type (car, truck, SUV, van): ");
         String type = scanner.next();
 
-        Vehicle newVehicle = new Vehicle(make, model, year, price, color, mileage, type);
+        Vehicles newVehicle = new Vehicles(make, model, year, price, color, mileage, type);
         dealership.addVehicle(newVehicle);
     }
 
@@ -119,7 +119,7 @@ public class Utility {
         System.out.print("Enter model of the vehicle to remove: ");
         String model = scanner.next();
 
-        Vehicle vehicleToRemove = dealership.findVehicleByMakeModel(make, model);
+        Vehicles vehicleToRemove = dealership.findVehicleByMakeModel(make, model);
         if (vehicleToRemove != null) {
             dealership.removeVehicle(vehicleToRemove);
             System.out.println("Vehicle removed.");
