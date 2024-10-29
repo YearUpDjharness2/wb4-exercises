@@ -1,26 +1,16 @@
-
 package com.pluralsight;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.ArrayList;
-
+import java.io.*;
 
 public class DealershipFileManager {
-    private static String fileName = "inventory.csv";
 
-    /**
-     * This getting a Dealership with vehicles.
-     * @return dealership.
-     */
-    public static Dealership getDealership(){
-        ArrayList<Vehicle> vehicles = new ArrayList<>();
+
+    public static Dealership getFromCSV(String filename){
+
         Dealership dealership = null;
 
         try{
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(filename));
 
             String line;
 
@@ -28,7 +18,7 @@ public class DealershipFileManager {
             String name = firstLineData[0];
             String address = firstLineData[1];
             String phone = firstLineData[2];
-            dealership = new Dealership(name, address, phone, vehicles);
+            dealership = new Dealership(name, address, phone);
 
             while((line = bufferedReader.readLine()) != null){
                 String[] newLine = line.split("\\|");
@@ -41,60 +31,53 @@ public class DealershipFileManager {
                     String color = newLine[5];
                     int odometer = Integer.parseInt(newLine[6]);
                     double price = Double.parseDouble(newLine[7]);
-                    vehicles.add(new Vehicle(vinNumber, makeYear, make, model, vehicleType, color, odometer, price));
+                    Vehicle v = new Vehicle(vinNumber, makeYear, make, model, vehicleType, color, odometer, price);
+                    dealership.addVehicleToInventory(v);
                 }
             }
             bufferedReader.close();
         }catch(Exception e){
             e.printStackTrace();
         }
+
         return dealership;
     }
 
-    /**
-     * This is saving a dealership
-     * @param dealership
-     * @return new dealership
-     */
-    public static String saveDealership(Dealership dealership){
-        if(dealership == null){
-            return "Dealership is Null";
-        }else{
-            try {
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
+    public static void saveToCSV(Dealership dealership, String filename){
+        try {
+            //Creating a file writer and assigning the file writer to the buffered writer.
+            FileWriter fw = new FileWriter(filename);
+            BufferedWriter bw = new BufferedWriter(fw);
 
-                bufferedWriter.write(new StringBuilder()
-                        .append(dealership.getName()).append("|")
-                        .append((dealership.getAddress())).append("|")
-                        .append((dealership.getPhone())).toString()
-                );
+            bw.write(getEncodedDealershipHeader(dealership));
 
-                for(Vehicle vehicle : dealership.getAllVehicles()){
-                    vehicle.getVin();
-                    vehicle.getYear();
-                    vehicle.getMake();
-                    vehicle.getModel();
-                    vehicle.getVehicleType();
-                    vehicle.getColor();
-                    vehicle.getOdometer();
-                    vehicle.getPrice();
-
-                    bufferedWriter.write(new StringBuilder()
-                            .append(vehicle.getVin()).append("|")
-                            .append((vehicle.getYear())).append("|")
-                            .append((vehicle.getMake())).append("|")
-                            .append((vehicle.getModel())).append("|")
-                            .append((vehicle.getVehicleType())).append("|")
-                            .append((vehicle.getColor())).append("|")
-                            .append((vehicle.getOdometer())).append("|")
-                            .append((vehicle.getPrice())).toString()
-                    );
-                }
-                bufferedWriter.close();
-            }catch (Exception e){
-                e.printStackTrace();
+            // Loop through transactions and write each one to the file
+            for (Vehicle vehicle : dealership.getAllVehicles()) {
+                bw.write(getEncodedVehicle(vehicle));
             }
-            return "Dealership is added successfully!";
+            bw.close(); // Close the BufferedWriter
+
+        } catch (IOException e){
+            System.out.println("Error while saving Transactions: " + e.getMessage());
         }
     }
+
+    private static String getEncodedDealershipHeader(Dealership dealership){
+        return dealership.getName() + "|" + dealership.getAddress() + "|" + dealership.getPhone() + "\n";
+    }
+
+    private static String getEncodedVehicle(Vehicle vehicle){
+        return new StringBuilder()
+                .append(vehicle.getVin()).append("|")
+                .append(vehicle.getYear()).append("|")
+                .append(vehicle.getMake()).append("|")
+                .append(vehicle.getModel()).append("|")
+                .append(vehicle.getVehicleType()).append("|")
+                .append(vehicle.getColor()).append("|")
+                .append(vehicle.getOdometer()).append("|")
+                .append(vehicle.getPrice()).append("\n").toString();
+    }
+
+
 }
+

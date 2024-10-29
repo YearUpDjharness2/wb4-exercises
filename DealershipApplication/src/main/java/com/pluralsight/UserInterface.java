@@ -1,119 +1,119 @@
 package com.pluralsight;
 
-
 public class UserInterface {
-    private Dealership dealership;
+
+    public static String filename = "inventory.csv";
+    public Dealership currentDealership;
+    private Vehicle v;
 
     public UserInterface(){
-        this.dealership = DealershipFileManager.getDealership();
+        currentDealership = DealershipFileManager.getFromCSV(filename);
     }
+
 
     public void display(){
-        for(Vehicle vehicle : dealership.getAllVehicles()){
-            System.out.println(vehicle);
-        }
-    }
 
-    public void processGetByPriceRequest(){
-        double min = Console.PromptForDouble("Enter the minimum price of a vehicle: ");
-        double max = Console.PromptForDouble("Enter the maximum price of a vehicle: ");
+        String options = """
+                Please select from the following choices:
+                1 - Find vehicles within a price range
+                2 - Find vehicles by make / model
+                3 - Find vehicles by year range
+                4 - Find vehicles by color
+                5 - Find vehicles by mileage range
+                6 - Find vehicles by type (car, truck, SUV, van)
+                7 - List ALL vehicles
+                8 - Add a vehicle
+                9 - Remove a vehicle
+                99 - Quit
 
-        dealership.getVehiclesByPrice(min, max).forEach(System.out::println);
-    }
+                >>>\s""";
 
-    public void processGetByMakeModelRequest(){
-        String make = Console.PromptForString("Enter car company that you are looking for: ");
-        String model = Console.PromptForString("Enter car model that you are looking for: ");
+        int selection;
 
-        dealership.getVehiclesByModel(make, model).forEach(System.out::println);
-    }
-
-    public void processGetByYearRequest(){
-        int min = Console.PromptForInt("Enter the minimum year of a vehicle: ");
-        int max = Console.PromptForInt("Enter the maximum year of a vehicle: ");
-
-        dealership.getVehiclesByYear(min, max).forEach(System.out::println);
-    }
-
-    public void processGetByColorRequest(){
-        String color = Console.PromptForString("Enter a color that you want the vehicle to be in: ");
-
-        dealership.getVehiclesByColor(color).forEach(System.out::println);
-    }
-
-    public void processGetByMileageRequest(){
-        int min = Console.PromptForInt("Enter the minimum mileage of a vehicle: ");
-        int max = Console.PromptForInt("Enter the maximum mileage of a vehicle:: ");
-
-        dealership.getVehiclesByMileage(min, max).forEach(System.out::println);
-    }
-
-    public void processGetByVehicleTypeRequest(){
-        String type = Console.PromptForString("Enter what type of vehicle you are looking for: ");
-
-        dealership.getVehiclesByType(type).forEach(System.out::println);
-    }
-
-    public void processGetAllVehicleRequest(){
-        for(Vehicle vehicle : dealership.getAllVehicles()){
-            System.out.println(vehicle);
-        }
-    }
-
-    public void processAddVehicleRequest(){
-
-    }
-//
-//    public void rocessRemoveVehicleRequest(){}
-
-    public void displayAll(){
-        String userChoice;
-        do{
-            System.out.println("Please choose from the options");
-            System.out.println("Display All vehicle:[A] ");
-            System.out.println("Display by Price:[P] ");
-            System.out.println("Display by Company:[C] ");
-            System.out.println("Display by make Year:[Y] ");
-            System.out.println("Display by Millage:[M] ");
-            System.out.println("Display by Car Color:[CC] ");
-            System.out.println("Display by Car Type:[T] ");
-            System.out.println("Enter [E] to exit");
-
-            userChoice = Console.PromptForString("Please enter your choice: ");
-            System.out.println("\n");
-
-            switch (userChoice){
-                case "A":
-                    display();
-                    System.out.println("\n");
-                    break;
-                case "P":
-                    processGetByPriceRequest();
-                    System.out.println("\n");
-                    break;
-                case "C":
-                    processGetByMakeModelRequest();
-                    System.out.println("\n");
-                    break;
-                case "Y":
-                    processGetByYearRequest();
-                    System.out.println("\n");
-                    break;
-                case "M":
-                    processGetByMileageRequest();
-                    System.out.println("\n");
-                    break;
-                case "CC":
-                    processGetByColorRequest();
-                    System.out.println("\n");
-                    break;
-                case "T":
-                    processGetByVehicleTypeRequest();
-                    System.out.println("\n");
-                    break;
-                default:
-                    System.out.println("You choice does not match!!");
+        // User Interface Loop
+        do {
+            System.out.println("Welcome to " + currentDealership.getName() + "!");
+            selection = Console.PromptForInt(options);
+            switch (selection) {
+                case 1 -> processGetByPriceRequest();
+                case 2 -> processGetByMakeModelRequest();
+                case 3 -> processGetByYearRequest();
+                case 4 -> processGetByColorRequest();
+                case 5 -> processGetByMileageRequest();
+                case 6 -> processGetByVehicleTypeRequest();
+                case 7 -> processGetAllVehiclesRequest();
+                case 8 -> processAddVehicleRequest();
+                case 9 -> processRemoveVehicleRequest();
+                case 99 -> System.exit(0);
+                default -> System.out.println("Invalid selection. Please try again.");
             }
-        }while (!userChoice.equalsIgnoreCase("E"));
+        } while (selection != 99);
+
+
+
     }
+
+    private void processRemoveVehicleRequest() {
+    }
+
+    private void processAddVehicleRequest() {
+        //get lots of values from the user...
+        int vin = Console.PromptForInt("Enter Vin: ");
+        int year = Console.PromptForInt("Enter year: ");
+        String make = Console.PromptForString("Enter make: ");
+        String model = Console.PromptForString("Enter model: ");
+        String vehicleType = Console.PromptForString("Enter vehicle type: ");
+        String color = Console.PromptForString("Enter color:  ");
+        int odometer = Console.PromptForInt("Enter odometer: ");
+        double price = Console.PromptForDouble("Enter price: ");
+
+        Vehicle v = new Vehicle(vin,year, make, model, vehicleType, color, odometer, price);
+
+        currentDealership.addVehicleToInventory(v);
+        DealershipFileManager.saveToCSV(currentDealership, filename);
+
+    }
+
+    private void processGetByVehicleTypeRequest() {
+        String type = Console.PromptForString("Enter type: ");
+        for(Vehicle v : currentDealership.getAllVehicles());
+        displayVehicle(v);
+    }
+    private void processGetByMileageRequest() {
+    }
+
+    private void processGetByColorRequest() {
+    }
+
+    private void processGetByYearRequest() {
+    }
+
+    private void processGetByMakeModelRequest() {
+        String make =Console.PromptForString("Enter Make: ");
+        String model = Console.PromptForString("Enter Model: ");
+        for(Vehicle v : currentDealership.getAllVehicles()){
+            displayVehicle(v);
+        }
+    }
+
+    private void processGetByPriceRequest() {
+        double min = Console.PromptForDouble("Enter min: ");
+        double max = Console.PromptForDouble("Enter max: ");
+        for(Vehicle v : currentDealership.getVehiclesByPrice(min, max)){
+            displayVehicle(v);
+        }
+    }
+
+
+    public void processGetAllVehiclesRequest(){
+        for(Vehicle v : currentDealership.getInventory()){
+            displayVehicle(v);
+        }
+    }
+
+    public void displayVehicle(Vehicle v){
+        System.out.println(v);
+    }
+
+
 }
